@@ -1,0 +1,15 @@
+flask
+flask_restful
+eventlet
+gevent
+Flask-SQLAlchemy
+flask_mysqldb
+Flask-Cors
+requests
+Flask-Migrate
+Flask-JWT-Extended
+flask-socketio
+eventlet
+redis
+flask-redis
+elasticsearch
