@@ -1,0 +1,98 @@
+{% extends 'base.html' %}
+{% block title %} Chat Room {% endblock %}  {# Corrected - Remove the duplicated "title" #}
+
+
+
+{% block body %}
+
+
+
+<div class="card">
+    <div id="header">
+        <h1>Chatter box!</h1>
+    </div>
+    <div id="message-section">
+        <ul id="msg">
+            <!-- Messages will be appended here dynamically -->
+        </ul>
+    </div>
+    <input type="hidden" value="{{ id }}" id="friend_user_id">
+    <div id="input-section">
+        <input id="input" type="text" placeholder="Type a message" autocomplete="off" autofocus="autofocus">
+        <button class="send" onclick="sendMessage()">
+            <div class="circle"><i class="zmdi zmdi-mail-send"></i></div>
+        </button>
+    </div>
+</div>
+
+<div id="data"></div>
+<script src="https://cdn.socket.io/4.1.3/socket.io.min.js"></script>
+<script>
+    f_id = document.getElementById("friend_user_id").value;
+    var authToken = localStorage.getItem('auth_token');
+    var socket = io.connect('http://127.0.0.1:3050/chat', {
+        query: {
+
+            'id': f_id,
+            },
+        secure: true,
+        transport: ['websocket', 'polling'],
+        reconnection: true,
+        heartbeatTimeout: 300000
+    });
+
+    socket.on('connect', function () {
+        console.log('Connected');
+    });
+
+    socket.on('receive_message', function (data) {
+        const { sender_sid, message } = data;
+        const newNode = document.createElement('li');
+        newNode.textContent = `${sender_sid}: ${message}`;
+        document.getElementById('msg').appendChild(newNode);
+    });
+
+    function sendMessage() {
+        var msg = document.getElementById('input').value;
+        var recipient_sid = document.getElementById('friend_user_id').value;
+
+        if (msg.trim() !== '') {
+            socket.emit('send_message', { recipient_sid: recipient_sid, message: msg });
+            document.getElementById('input').value = '';
+        }
+    }
+</script>
+
+<!--<script>-->
+<!--    var socket = io.connect('http://127.0.0.1:3050/chat', {-->
+<!--    query:{"id":"msg from janki"},-->
+<!--    secure: true,-->
+<!--    transport: ['websocket', 'polling'],-->
+<!--    reconnection: true,-->
+<!--    heartbeatTimeout: 300000-->
+<!--    });-->
+
+<!--    socket.on('connect', function () {-->
+<!--        console.log('Connected');-->
+<!--    });-->
+
+<!--    socket.on('receive_message', function (data) {-->
+<!--        const { sender_sid, message } = data;-->
+<!--        const newNode = document.createElement('li');-->
+<!--        newNode.textContent = `${sender_sid}: ${message}`;-->
+<!--        document.getElementById('msg').appendChild(newNode);-->
+<!--    });-->
+
+<!--    function sendMessage() {-->
+<!--        var msg = document.getElementById('input').value;-->
+<!--        var recipient_sid = document.getElementById('friend_user_id').value;-->
+
+<!--        if (msg.trim() !== '') {-->
+<!--            socket.emit('send_message', { recipient_sid: recipient_sid, message: msg });-->
+<!--            document.getElementById('input').value = '';-->
+<!--        }-->
+<!--    }-->
+<!--</script>-->
+
+{% endblock body %}
+

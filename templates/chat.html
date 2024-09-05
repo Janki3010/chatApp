@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+{% block title %} Chat Room {% endblock %}
+
+{% block body %}
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+   <input type="hidden" value="{{ id }}" id="friend_user_id">
+   <div id="chat">
+       <li id="msg"></li>
+       <div id="messages"></div>
+       <input id="message" autocomplete="off" /><button onclick="sendMessage()">Send</button>
+   </div>
+   <script>
+    var friend_id = document.getElementById("friend_user_id").value;
+    var user_id = localStorage.getItem('u_id');
+    var user_name = localStorage.getItem('u_name');
+    var userData = JSON.parse(localStorage.getItem('userData'));
+
+    for (let i = 0; i < userData.length ; i++) {
+          if(userData[i][0] == friend_id){
+                var f_name = userData[i][1];
+          }
+    }
+
+    var socket = io.connect('http://127.0.0.1:3050/chat', {
+        query: {
+            "friend_id": friend_id,
+            "user_id": user_id,
+            "f_name": f_name,
+            "u_name": user_name
+        },
+        secure: true,
+        transport: ['websocket', 'polling'],
+        reconnection: true,
+        heartbeatTimeout: 300000
+    });
+
+    socket.on('connect', function () {
+        socket.emit('load_messages', { user_id: user_id, friend_id: friend_id });
+    });
+
+   socket.on('chat_history', function (data) {
+    var msgList = document.getElementById("msg");
+    msgList.innerHTML = '';
+    data.forEach(function (chat) {
+        var li = document.createElement("li");
+        li.textContent = chat.uname + ": " + chat.message;
+            msgList.appendChild(li);
+        });
+      });
+
+    socket.on('message', function (data) {
+        var li = document.createElement("li");
+        li.textContent = data.msg;
+        document.getElementById("msg").appendChild(li);
+    });
+
+    socket.on('receive_message', function(data) {
+        console.log(data);
+        const newNode = document.createElement('div');
+        newNode.innerHTML = `</b> ${data.msg}`;
+       document.getElementById('messages').appendChild(newNode);
+
+    });
+
+
+    function sendMessage() {
+        var msg = document.getElementById('message').value;
+        socket.emit('message', { friend_id: friend_id, msg: msg });
+        document.getElementById('message').value = '';
+    }
+
+</script>
+
+
+{% endblock body %}
+
+
+
+
+
+
+
+
+

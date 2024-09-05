@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% block title %} View Requests {% endblock title %}
+
+{% block body %}
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <a class="navbar-brand" href="/home">Chat App</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item">
+        <a class="nav-link" href="/viewRequests">View Requests</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/connection">My Friends</a>
+      </li>
+<!--      <li class="nav-item">-->
+<!--        <a class="nav-link" href="/chat">Chat</a>-->
+<!--      </li>-->
+      <li class="nav-item">
+        <button class="btn btn-primary" id="logout-link" type="submit" onclick="onLogout()">Logout</button>
+      </li>
+    </ul>
+  </div>
+</nav>
+<!--<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">-->
+
+<!--<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js" integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0" crossorigin="anonymous"></script>-->
+<!--<script src="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>-->
+
+
+{% if msg %}
+  <div class="container mt-4">
+    <!-- Dismissible Alert -->
+    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+      {{msg}}
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+</div>
+{% endif %}
+
+  <script src="static/js/viewrequest.js"></script>
+
+
+<div id="data"></div>
+{% endblock body %}

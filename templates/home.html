@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% block title %} Home {% endblock title %}
+
+{% block body %}
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <a class="navbar-brand" href="/home">Chat App</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item">
+        <a class="nav-link" href="/viewRequests">View Requests</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/connection">My Friends</a>
+      </li>
+<!--      <li class="nav-item">-->
+<!--        <a class="nav-link" href="/chat">Chat</a>-->
+<!--      </li>-->
+      <li class="nav-item">
+        <button class="btn btn-primary" id="logout-link" type="submit" onclick="onLogout()">Logout</button>
+      </li>
+    </ul>
+  </div>
+</nav>
+{% if msg %}
+  <div class="container mt-4">
+    <!-- Dismissible Alert -->
+    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+      {{msg}}
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+</div>
+{% endif %}
+
+  <script src="static/js/home.js"></script>
+
+
+<div id="data"></div>
+{% endblock body %}
