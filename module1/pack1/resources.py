@@ -198,19 +198,22 @@ class Connections(Resource):
             # Prepare the response data
             friends_list = []
             cur = mysql.connection.cursor()
-            for friend in friends:
-                cur.callproc('fetch_usernmae', [friend.friend_id])
-                data = cur.fetchone()
-                friend_data = {
-                    'id': friend.friend_id,
-                    'username': data[0],
-                    'email': data[1]
-                }
-                friends_list.append(friend_data)
+            try:
+                for friend in friends:
+                    cur.callproc('fetch_usernmae', [friend.friend_id])
+                    data = cur.fetchone()
+                    if data:
+                        friend_data = {
+                            'id': friend.friend_id,
+                            'username': data[0],
+                            'email': data[1]
+                        }
+                        friends_list.append(friend_data)
+                    cur.nextset()  # Advance to the next result set if necessary
+            finally:
+                cur.close()  # Ensure the cursor is closed properly
 
-            cur.close()
 
-            # return {'msg': 'success',}, 200
             return {'msg': 'success', 'data': friends_list}, 200
         else:
             return {"msg": "User not logged in"}, 401
